@@ -1,1 +1,1 @@
-# MIniGolf
+# MiniGolf
