@@ -7,20 +7,32 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool gamePaused = false;
     public GameObject pauseMenuUI;
+    public GameObject levelSelectUI;
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (gamePaused == true)
+            if (gamePaused == true && levelSelectUI.activeSelf == true)
+            {
+                GoBack();
+            }
+            else if (gamePaused == true && levelSelectUI.activeSelf == false)
             {
                 Resume();
-            } else 
+            } 
+            else 
             {
                 Pause();
             }
         }
+    }
+
+    public void GoBack()
+    {
+        pauseMenuUI.SetActive(true);
+        levelSelectUI.SetActive(false);
     }
     public void Resume()
     {
@@ -28,6 +40,8 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = false;
 
         pauseMenuUI.SetActive(false);
+        levelSelectUI.SetActive(false);
+
         Time.timeScale = 1f;
         gamePaused = false;
     }
