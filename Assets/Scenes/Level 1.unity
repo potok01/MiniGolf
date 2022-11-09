@@ -2914,7 +2914,7 @@ Transform:
   m_Children:
   - {fileID: 836769678}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &741047248
 GameObject:
@@ -4498,7 +4498,7 @@ Transform:
   - {fileID: 474907800}
   - {fileID: 2019718184}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &865187817
 MonoBehaviour:
@@ -6274,7 +6274,7 @@ Transform:
   - {fileID: 1362354333}
   - {fileID: 149108594}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1192409855
 GameObject:
@@ -9435,15 +9435,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6245210419597323033, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6245210419597323033, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.75
+      value: -14.72
       objectReference: {fileID: 0}
     - target: {fileID: 6245210419597323033, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.75
+      value: -7.63
       objectReference: {fileID: 0}
     - target: {fileID: 6245210419597323033, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9481,7 +9481,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ball
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4266371279861535777, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
 --- !u!1 &6245210418867839229 stripped
 GameObject:
@@ -9500,6 +9501,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f97847d6d622024683663b248fbe50b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 1000
-  angle: 170
-  velocity: 351
+  angle: 90
+  power: 100
