@@ -16,7 +16,7 @@ public class GolfBallController : MonoBehaviour
     public int timesHit = 0;
     float maxAngle = 180.0f;
     float minAngle = 0.0f;
-    public float maxPower = 20.0f;
+    float maxPower = 100.0f;
     float minPower = 0.0f;
 
     private void Awake()
@@ -59,7 +59,7 @@ public class GolfBallController : MonoBehaviour
             arcArray2[i] = arcArray[i];
         }
 
-        lr.SetVertexCount(resolution - 10);
+        lr.positionCount = resolution - 10;
         return arcArray2;
     }
 
@@ -90,7 +90,7 @@ public class GolfBallController : MonoBehaviour
             // change the angle of the ball to the left
             if (angle > minAngle)
             {                
-                angle -= 0.1f;
+                angle -= 0.2f;
             }
         }
 
@@ -99,7 +99,7 @@ public class GolfBallController : MonoBehaviour
             // change the angle of the ball to the right
             if (angle < maxAngle)
             {
-                angle += 0.1f;
+                angle += 0.2f;
             }            
         }
 
@@ -108,7 +108,7 @@ public class GolfBallController : MonoBehaviour
             // increase the power to be applied to the ball
             if (power < maxPower)
             {
-                power += 0.1f;
+                power += 0.2f;
             }            
         }
         
@@ -117,7 +117,7 @@ public class GolfBallController : MonoBehaviour
             // decrease the power to be applied to the ball
             if (power > minPower)
             {
-                power -= 0.1f;
+                power -= 0.2f;
             }          
         }
 

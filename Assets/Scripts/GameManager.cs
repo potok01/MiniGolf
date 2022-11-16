@@ -5,12 +5,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GolfBallController golfBallController;
+    string timesHitString = "Times Hit: ";
 
     void Update()
     {
-        Debug.Log("Angle: " + golfBallController.angle);
-        Debug.Log("Power: " + golfBallController.power);
-        Debug.Log("Times Hit: " + golfBallController.timesHit);
+        timesHitString = "Times Hit: " + golfBallController.timesHit;
+        Debug.Log(timesHitString);
     }
     
 }
