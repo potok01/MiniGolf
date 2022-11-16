@@ -6,11 +6,10 @@ public class RandomGolfBall : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Time.time % 0.81632653f < 0.01f)
         {
-            // apply a random upwards force to the ball
-            Vector2 direction = new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(0.0f, 1.0f));
+            Vector2 direction = new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
             GetComponent<Rigidbody2D>().AddForce(direction * 5000);
-        }  
+        }
     }
 }
