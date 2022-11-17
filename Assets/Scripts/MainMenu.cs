@@ -9,7 +9,14 @@ public class MainMenu : MonoBehaviour
 {
     public void LoadLevel(Button button)
     {
-        string sceneName = button.name;
+        string sceneName = button.name; 
+
+        // if sceneName starts with "Level" then load the scene
+        if (sceneName.StartsWith("Level"))
+        {
+            // load player mode
+            SceneManager.LoadScene("LoadPlayerMode");
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -18,10 +25,6 @@ public class MainMenu : MonoBehaviour
         {
             SceneManager.LoadSceneAsync(sceneName);
         }
-        else
-        {
-            SceneManager.LoadSceneAsync("Empty Level");
-        }  
     }
 
     public void QuitGame()

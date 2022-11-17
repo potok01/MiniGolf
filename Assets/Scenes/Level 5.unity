@@ -4068,10 +4068,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   angle: 90
   power: 100
-  resolution: 0
   powerIncrement: 0.1
   angleIncrement: 0.1
   timesHit: 0
+  resolution: 0
 --- !u!120 &529889509
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -5323,10 +5323,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   angle: 90
   power: 10
-  resolution: 15
   powerIncrement: 0.1
   angleIncrement: 0.1
   timesHit: 0
+  resolution: 15
 --- !u!120 &767215792
 LineRenderer:
   m_ObjectHideFlags: 0

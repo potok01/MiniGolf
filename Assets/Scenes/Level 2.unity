@@ -3298,7 +3298,6 @@ MonoBehaviour:
   victoryScreen: {fileID: 1528168834}
   golfBallController: {fileID: 529889508}
   golfBall: {fileID: 767215790}
-  audioSource: {fileID: 529889509}
   tilemap: {fileID: 1357523232}
   holeTile: {fileID: 11400000, guid: c2fdea8317f299f488183f843710d341, type: 2}
 --- !u!4 &529889507
@@ -3330,10 +3329,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   angle: 90
   power: 100
-  resolution: 0
   powerIncrement: 0.1
   angleIncrement: 0.1
   timesHit: 0
+  resolution: 0
 --- !u!82 &529889509
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4852,10 +4851,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   angle: 90
   power: 10
-  resolution: 15
   powerIncrement: 0.1
   angleIncrement: 0.1
   timesHit: 0
+  resolution: 15
 --- !u!120 &767215796
 LineRenderer:
   m_ObjectHideFlags: 0

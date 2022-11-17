@@ -6,46 +6,46 @@ using TMPro;
 using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
-{ 
-    public TextMeshProUGUI timesHitText;
-    public TextMeshProUGUI victoryText;
-    public TextMeshProUGUI putText;
+{
+    [Header("Victory Screen Information")]
+    public TextMeshProUGUI timesHitText; // Text to display the number of times the player has hit the ball
+    public TextMeshProUGUI victoryText; // Text to display the victory message on the victory screen
+    public TextMeshProUGUI putText; // Text to display the number of puts on the victory screen
+    public GameObject victoryScreen; // The victory screen object
+    [Space(10)]
 
-    public GameObject victoryScreen;
-    public GolfBallController golfBallController;
-    public GameObject golfBall;
+    [Header("Game Information")]
+    public GolfBallController golfBallController; // Reference to the golf ball controller
+    public GameObject golfBall; // Reference to the golf ball
+    public Tilemap tilemap; // Reference to the tilemap
+    public TileBase holeTile; // Reference to the hole tile
 
-    public Tilemap tilemap;
-    public TileBase holeTile;
-
-    // Update is called once per frame
-    void Update()
-    { 
-        // update the times hit on the screen
+    void Update() // called once per frame
+    {
+        // Updates the times hit text every time the player hits the ball
         timesHitText.text = "Puts: " + golfBallController.timesHit.ToString();
 
-        // check if the ball is in the hole
+        // Check if the ball is in the hole
         if (tilemap.GetTile(tilemap.WorldToCell(golfBall.transform.position)) == holeTile)
         {
-            // if the golf ball is not moving
+            // Check if the golf ball is not moving
             if (golfBall.GetComponent<Rigidbody2D>().velocity.magnitude < 0.1f)
             {
-                // show the victory screen
+                // Show the victory screen
                 victoryScreen.SetActive(true);
                 if (golfBallController.timesHit == 1) 
                 {
-                    victoryText.text = "Hole in one!";
+                    victoryText.text = "Hole in one!"; // If player got hole in one
                 } else 
                 {
-                    victoryText.text = "Victory!";
+                    victoryText.text = "Victory!"; // else
                 }
-                putText.text = "Puts: " + golfBallController.timesHit.ToString();
 
-                // unlock the cursor
-                Cursor.lockState = CursorLockMode.None;
+                // Creates variable to display the number of puts
+                putText.text = "Puts: " + golfBallController.timesHit.ToString();
                 
-                // dont read any button presses
-                golfBallController.enabled = false;
+                Cursor.lockState = CursorLockMode.None; // Unlock the cursor
+                golfBallController.enabled = false; // Disable the golf ball controller
             }
         }
     }

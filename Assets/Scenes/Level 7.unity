@@ -2489,10 +2489,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   angle: 90
   power: 100
-  resolution: 0
   powerIncrement: 0.1
   angleIncrement: 0.1
   timesHit: 0
+  resolution: 0
 --- !u!120 &529889509
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -4578,10 +4578,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   angle: 90
   power: 10
-  resolution: 15
   powerIncrement: 0.1
   angleIncrement: 0.1
   timesHit: 0
+  resolution: 15
 --- !u!120 &767215792
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -16803,12 +16803,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6245210419597323034, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6245210419597323034, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 6200000, guid: f59fdd58463bde24b8a79f5d261992a2, type: 2}
     - target: {fileID: 6245210419597323034, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
       propertyPath: m_LinearDrag
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6245210419597323034, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
+      propertyPath: m_AngularDrag
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 6245210419597323034, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
       propertyPath: m_GravityScale

@@ -91,6 +91,14 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
+    public void UnloadPlayerMode()
+    {
+        Time.timeScale = 1f;
+        gamePaused = false;
+        SceneManager.LoadScene("LoadPlayerMode");
+        SceneManager.LoadScene("MainMenu");
+    }
+
     public void QuitGame()
     {
         Application.Quit();
