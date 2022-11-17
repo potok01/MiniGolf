@@ -20,6 +20,11 @@ public class GameManager : MonoBehaviour
     public Tilemap tilemap; // Reference to the tilemap
     public TileBase holeTile; // Reference to the hole tile
 
+    void Start() 
+    {
+        Cursor.visible = false; // Hide the cursor
+    }
+
     void Update() // called once per frame
     {
         // Updates the times hit text every time the player hits the ball
@@ -33,6 +38,8 @@ public class GameManager : MonoBehaviour
             {
                 // Show the victory screen
                 victoryScreen.SetActive(true);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
                 if (golfBallController.timesHit == 1) 
                 {
                     victoryText.text = "Hole in one!"; // If player got hole in one
@@ -43,8 +50,6 @@ public class GameManager : MonoBehaviour
 
                 // Creates variable to display the number of puts
                 putText.text = "Puts: " + golfBallController.timesHit.ToString();
-                
-                Cursor.lockState = CursorLockMode.None; // Unlock the cursor
                 golfBallController.enabled = false; // Disable the golf ball controller
             }
         }
