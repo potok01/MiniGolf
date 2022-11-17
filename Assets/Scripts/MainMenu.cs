@@ -7,13 +7,12 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-   public void LoadLevel(Button button)
-   {
+    public void LoadLevel(Button button)
+    {
         string sceneName = button.name;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
 
         if (Application.CanStreamedLevelBeLoaded(sceneName))
         {
@@ -23,10 +22,10 @@ public class MainMenu : MonoBehaviour
         {
             SceneManager.LoadSceneAsync("Empty Level");
         }  
-   }
+    }
 
-   public void QuitGame()
-   {       
-       Application.Quit();
-   }
+    public void QuitGame()
+    {       
+        Application.Quit();
+    }
 }

@@ -9,12 +9,19 @@ public class PauseMenu : MonoBehaviour
     public static bool gamePaused = false;
     public GameObject pauseMenuUI;
     public GameObject levelSelectUI;
+    public GameObject victoryScreen;
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            // if the victory screen is active, dont pause the game
+            if (victoryScreen.activeSelf == true)
+            {
+                return;
+            }
+
             if (gamePaused == true && levelSelectUI.activeSelf == true)
             {
                 GoBack();
@@ -35,6 +42,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         levelSelectUI.SetActive(false);
     }
+
     public void Resume()
     {
         Cursor.lockState = CursorLockMode.Locked;

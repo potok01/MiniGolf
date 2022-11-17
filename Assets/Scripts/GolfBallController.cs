@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(LineRenderer))]
 public class GolfBallController : MonoBehaviour
 {
     LineRenderer lr;
@@ -9,6 +8,9 @@ public class GolfBallController : MonoBehaviour
     public float angle = 90.0f;
     public float power = 1.0f;
     public int resolution = 10;
+
+    public float powerIncrement = 0.1f;
+    public float angleIncrement = 0.1f;
 
     float g;
     float radianAngle;
@@ -90,7 +92,7 @@ public class GolfBallController : MonoBehaviour
             // change the angle of the ball to the left
             if (angle > minAngle)
             {                
-                angle -= 0.2f;
+                angle -= angleIncrement;
             }
         }
 
@@ -99,7 +101,7 @@ public class GolfBallController : MonoBehaviour
             // change the angle of the ball to the right
             if (angle < maxAngle)
             {
-                angle += 0.2f;
+                angle += angleIncrement;
             }            
         }
 
@@ -108,7 +110,7 @@ public class GolfBallController : MonoBehaviour
             // increase the power to be applied to the ball
             if (power < maxPower)
             {
-                power += 0.2f;
+                power += powerIncrement;
             }            
         }
         
@@ -117,7 +119,7 @@ public class GolfBallController : MonoBehaviour
             // decrease the power to be applied to the ball
             if (power > minPower)
             {
-                power -= 0.2f;
+                power -= powerIncrement;
             }          
         }
 
