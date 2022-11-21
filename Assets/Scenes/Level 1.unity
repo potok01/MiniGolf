@@ -3931,6 +3931,7 @@ MonoBehaviour:
   power: 100
   powerIncrement: 0.1
   angleIncrement: 0.1
+  linearDrag: 0.1
   timesHit: 0
   resolution: 10
 --- !u!4 &529889509
@@ -10279,7 +10280,7 @@ PrefabInstance:
       objectReference: {fileID: 6200000, guid: f59fdd58463bde24b8a79f5d261992a2, type: 2}
     - target: {fileID: 6245210419597323034, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
       propertyPath: m_LinearDrag
-      value: 0
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 6245210419597323034, guid: ffbd4a57d8c3c7b4fad3223b055ee1ed, type: 3}
       propertyPath: m_AngularDrag
@@ -10355,8 +10356,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   angle: 90
   power: 10
-  powerIncrement: 0.1
-  angleIncrement: 0.1
+  powerIncrement: 0.6
+  angleIncrement: 0.6
+  linearDrag: 0.3
   timesHit: 0
   resolution: 15
 --- !u!120 &1111500261

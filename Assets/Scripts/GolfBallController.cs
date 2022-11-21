@@ -7,17 +7,17 @@ public class GolfBallController : MonoBehaviour
     public float angle = 90.0f; // The angle of the ball
     float radianAngle; // The angle of the ball in radians
     public float power = 1.0f; // The power of the ball
-    public float powerIncrement = 0.1f; // The amount to increment the power by
-    public float angleIncrement = 0.1f; // The amount to increment the angle by
+    float powerIncrement = 0.1f; // The amount to increment the power by
+    float angleIncrement = 0.1f; // The amount to increment the angle by
     float maxAngle = 180.0f;
     float minAngle = 0.0f;
-    float maxPower = 100.0f;
+    float maxPower = 1000.0f;
     float minPower = 0.0f;
+    public float linearDrag = 0.3f; // The linear drag of the ball
     public int timesHit = 0; // The number of times the ball has been hit
     LineRenderer lr; // Reference to the line renderer
     public int resolution = 10; // The resolution of the line renderer
     float g; // The gravity of the ball
-    float linearDrag = 0.1f; // The linear drag of the ball
 
     private void Awake()
     {
@@ -36,7 +36,10 @@ public class GolfBallController : MonoBehaviour
         Vector3[] arcArray = new Vector3[resolution + 1]; // Create an array of vectors
 
         radianAngle = Mathf.Deg2Rad * angle; // Convert the angle to radians
-        float maxDistance = (power * power * Mathf.Sin(2 * radianAngle)) / g; // Calculate the max distance of the ball
+        
+        float velocity = power * (1 - linearDrag); // apply the linear drag to the power
+
+        float maxDistance = (velocity * velocity * Mathf.Sin(2 * radianAngle)) / g; // calculate the maxDistance of the ball
 
         for (int i = 0; i <= resolution; i++) // Loop through the resolution
         {
