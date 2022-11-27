@@ -14,20 +14,23 @@ public class NetManager : MonoBehaviour
     public float maxPower = 1000f;
     public float maxAngle = 180.0f;
 
-    private int[] layers = {580, 10, 10, 2 };
+    private int[] layers = {484, 10, 10, 2 };
 
     public GameObject netBall;
 
     public List<NeuralNetwork> nets = new List<NeuralNetwork>();
     public List<GameObject> netBalls = new List<GameObject>();
 
-    public Tilemap _tilemap;
-    public Grid _grid;
+    private Tilemap _tilemap;
 
-    public int[] worldState = new int[578];
+    public int[] worldState = new int[482];
     public float goalPosX;
     public float goalPosY;
 
+    private void Awake()
+    {
+        _tilemap = GameObject.Find("Tilemap").GetComponent<Tilemap>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -87,7 +90,6 @@ public class NetManager : MonoBehaviour
             CreateNetBalls();
 
             generation += 1;
-            Debug.Log(generation);
         }
     }
 
@@ -141,15 +143,11 @@ public class NetManager : MonoBehaviour
             }
         }
 
-
         Vector3 goalInLocal = _tilemap.GetCellCenterWorld(new Vector3Int(worldState[0], worldState[1], 0));
         Vector3 goalInWorld = goalInLocal + _tilemap.origin;
 
         goalPosX = goalInWorld.x;
         goalPosY = goalInWorld.y;
-
-        Debug.Log(goalPosX);
-        Debug.Log(goalPosY);
     }
 
 }
