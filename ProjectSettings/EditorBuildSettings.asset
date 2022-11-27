@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/LoadPlayerMode.unity
     guid: 1518edd740f483d4cae690496014f40c
   - enabled: 1
-    path: Assets/Scenes/NeuralNetworkTest.unity
+    path: Assets/Scenes/Neural Network Level 1.unity
     guid: 9cd9252162679c045a9932286e3c13b5
   - enabled: 1
     path: Assets/Scenes/Level 2.unity

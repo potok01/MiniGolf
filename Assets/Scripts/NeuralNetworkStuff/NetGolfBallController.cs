@@ -5,7 +5,10 @@ public class NetGolfBallController : MonoBehaviour
 {
     [Header("Ball Information")]
     public Rigidbody2D _rb;
-    private NeuralNetwork _net;
+    public NetManager _nm;
+    public NeuralNetwork _net;
+
+    public int maxHits;
 
     public float angle; // The angle of the ball
     float maxAngle = 180.0f;
@@ -15,18 +18,24 @@ public class NetGolfBallController : MonoBehaviour
 
     public int timesHit = 0; // The number of times the ball has been hit
     public bool initialized = false;
+    public bool finished = false;
 
-    private void Start()
-    {
-
-    }
     void FixedUpdate()
     {
         if (initialized)
         {
-            if (_rb.IsSleeping() && timesHit < 100)
+            if (_rb.IsSleeping() && timesHit < maxHits)
             {
                 Put();
+            }
+
+            if(_rb.IsSleeping() && timesHit >= maxHits && !finished)
+            {
+                _net.SetFitness(Mathf.Sqrt(Mathf.Pow((_nm.goalPosX - transform.position.x),2) + Mathf.Pow((_nm.goalPosY - transform.position.y),2)));
+                Debug.Log(_net.GetFitness());
+
+                finished = true;
+                _nm.finishedNets += 1;
             }
         }
     }
@@ -36,21 +45,20 @@ public class NetGolfBallController : MonoBehaviour
         float[] inputs = new float[] {transform.position.x, transform.position.y};
         float[] outputs = _net.FeedForward(inputs);
 
-        Debug.Log(outputs[0]);
-        Debug.Log(outputs[1]);
-
         float radianAngle = Mathf.Deg2Rad * (maxAngle/2 + (maxAngle/2 * outputs[0]));
         float power = (maxPower / 2 + (maxPower / 2 * outputs[1]));
 
         _rb.AddForce(new Vector2(Mathf.Cos(radianAngle), Mathf.Sin(radianAngle)) * power, ForceMode2D.Impulse);
         timesHit += 1;
-
-        Debug.Log(timesHit);
     }
 
-    public void Init(NeuralNetwork net)
+    public void Init(NeuralNetwork net, NetManager nm)
     {
         this._net = net;
+        this._nm = nm;
         this.initialized = true;
+        maxHits = _nm.maxHits;
+        maxPower = _nm.maxPower;   
+        maxAngle = _nm.maxAngle;
     }
 }

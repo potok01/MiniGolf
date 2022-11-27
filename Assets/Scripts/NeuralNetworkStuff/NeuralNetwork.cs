@@ -14,6 +14,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
     public NeuralNetwork(int[] layers, int[] worldState) {
         this.layers = new int[layers.Length];
         this.worldState = worldState;
+
         for (int i = 0; i < layers.Length; i++)
         {
             this.layers[i] = layers[i];
@@ -25,13 +26,17 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         InitWeights();
     }
 
-    public NeuralNetwork(NeuralNetwork copyNetwork)
+    public NeuralNetwork(NeuralNetwork copyNetwork, int[] worldState)
     {
         this.layers = new int[copyNetwork.layers.Length];
-        for(int i = 0; i < copyNetwork.layers.Length; i++)
+        this.worldState = worldState;
+
+        for (int i = 0; i < copyNetwork.layers.Length; i++)
         {
             this.layers[i] = copyNetwork.layers[i];
         }
+
+        random = new Random(System.DateTime.Now.Millisecond);
 
         InitNeurons();
         InitWeights();
