@@ -18,6 +18,12 @@ public class MainMenu : MonoBehaviour
             SceneManager.LoadScene("LoadPlayerMode");
         }
 
+        if (sceneName.StartsWith("Neural"))
+        {
+            // load neural mode
+            SceneManager.LoadScene("LoadDemoMode");
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 

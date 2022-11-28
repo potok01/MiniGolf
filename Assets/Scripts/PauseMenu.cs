@@ -16,11 +16,11 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // if the victory screen is active, dont pause the game
             if (victoryScreen.activeSelf == true)
             {
                 return;
             }
+
 
             if (gamePaused == true && levelSelectUI.activeSelf == true)
             {

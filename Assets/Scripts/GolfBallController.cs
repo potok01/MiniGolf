@@ -121,13 +121,13 @@ public class GolfBallController : MonoBehaviour
         }
 
         // if - is pressed slow down time
-        if (Input.GetKeyDown(KeyCode.Minus))
+        if (Input.GetKeyDown(KeyCode.J))
         {
             Time.timeScale = Time.timeScale / 2;
         }
 
         // if = is pressed speed up time
-        if (Input.GetKeyDown(KeyCode.Equals))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             Time.timeScale = Time.timeScale * 2;
         }
