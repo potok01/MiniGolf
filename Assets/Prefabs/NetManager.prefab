@@ -46,8 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   finishedNets: 0
   generation: 0
+  bestFitness: 0
+  worstFitness: 0
   population: 25
-  maxHits: 1
+  maxHitAttempts: 5
   maxPower: 1000
   maxAngle: 180
   netBall: {fileID: 797582444828924062, guid: a485c1a4a1b5fc6468c17af073a25b12, type: 3}

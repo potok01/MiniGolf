@@ -8,7 +8,7 @@ public class NetGolfBallController : MonoBehaviour
     public NetManager _nm;
     public NeuralNetwork _net;
 
-    public int maxHits;
+    public int maxHitAttempts;
 
     public float angle; // The angle of the ball
     float maxAngle = 180.0f;
@@ -16,7 +16,10 @@ public class NetGolfBallController : MonoBehaviour
     public float power; // The power of the ball
     float maxPower = 1000.0f;
 
+    public float hitDissuasion = 1;
     public int timesHit = 0; // The number of times the ball has been hit
+    public int hitAttempts = 0; // Times the network has attempted to hit the ball
+
     public bool initialized = false;
     public bool finished = false;
 
@@ -24,14 +27,24 @@ public class NetGolfBallController : MonoBehaviour
     {
         if (initialized)
         {
-            if (_rb.IsSleeping() && timesHit < maxHits)
+            if (_rb.IsSleeping() && hitAttempts < maxHitAttempts)
             {
                 Put();
             }
 
-            if(_rb.IsSleeping() && timesHit >= maxHits && !finished)
+            if(_rb.IsSleeping() && hitAttempts >= maxHitAttempts && !finished)
             {
-                _net.SetFitness(Mathf.Sqrt(Mathf.Pow((_nm.goalPosX - transform.position.x),2) + Mathf.Pow((_nm.goalPosY - transform.position.y),2)));
+                float distance = Mathf.Sqrt(Mathf.Pow((_nm.goalPosX - transform.position.x), 2) + Mathf.Pow((_nm.goalPosY - transform.position.y), 2));
+
+                _net.AddFitness(34 - distance - (hitDissuasion * timesHit));
+
+                
+                if(distance < 1)
+                {
+                    _net.AddFitness(34);
+                }
+                
+
                 Debug.Log(_net.GetFitness());
 
                 finished = true;
@@ -48,8 +61,13 @@ public class NetGolfBallController : MonoBehaviour
         float radianAngle = Mathf.Deg2Rad * (maxAngle/2 + (maxAngle/2 * outputs[0]));
         float power = (maxPower / 2 + (maxPower / 2 * outputs[1]));
 
-        _rb.AddForce(new Vector2(Mathf.Cos(radianAngle), Mathf.Sin(radianAngle)) * power, ForceMode2D.Impulse);
-        timesHit += 1;
+        if (outputs[2] > 0.5)
+        {
+            _rb.AddForce(new Vector2(Mathf.Cos(radianAngle), Mathf.Sin(radianAngle)) * power, ForceMode2D.Impulse);
+            timesHit += 1;
+        }
+
+        hitAttempts += 1;
     }
 
     public void Init(NeuralNetwork net, NetManager nm)
@@ -57,7 +75,7 @@ public class NetGolfBallController : MonoBehaviour
         this._net = net;
         this._nm = nm;
         this.initialized = true;
-        maxHits = _nm.maxHits;
+        maxHitAttempts = _nm.maxHitAttempts;
         maxPower = _nm.maxPower;   
         maxAngle = _nm.maxAngle;
     }

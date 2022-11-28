@@ -9,12 +9,16 @@ public class NetManager : MonoBehaviour
     public int finishedNets = 0;
     public int generation = 0;
 
+    public float bestFitness = 0;
+    public float worstFitness = 0;
+    public int bestFitnessTimesHit = 0;
+
     public int population = 10;
-    public int maxHits = 1;
+    public int maxHitAttempts = 5;
     public float maxPower = 1000f;
     public float maxAngle = 180.0f;
 
-    private int[] layers = {484, 10, 10, 2 };
+    private int[] layers = {484, 10, 10, 3 };
 
     public GameObject netBall;
 
@@ -71,15 +75,17 @@ public class NetManager : MonoBehaviour
         {
             finishedNets = 0;
             nets.Sort();
-            Debug.Log("Best fitness" + nets[0].GetFitness());
-            Debug.Log("Worst fitness" + nets[population-1].GetFitness());
+
+            bestFitness = nets[population - 1].GetFitness();
+            worstFitness = nets[0].GetFitness();
+            bestFitnessTimesHit = netBalls[population - 1].GetComponent<NetGolfBallController>().timesHit;
 
             for (int i = 0; i < population / 2; i++)
             {
-                nets[i] = new NeuralNetwork(nets[i], worldState);
+                nets[i] = new NeuralNetwork(nets[i + (population / 2)], worldState);
+                nets[i].Mutate();
 
-                nets[i + (population / 2)] = new NeuralNetwork(nets[i], worldState);
-                nets[i].Mutate();  
+                nets[i + (population / 2)] = new NeuralNetwork(nets[i + (population / 2)], worldState);
             }
 
             for (int i = 0; i < population; i++)
