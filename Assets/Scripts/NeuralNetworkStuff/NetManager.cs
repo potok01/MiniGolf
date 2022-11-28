@@ -164,6 +164,12 @@ public class NetManager : MonoBehaviour
             netBalls.Add(newNetBall);
         }
 
+        netBalls[population-1].GetComponent<SpriteRenderer>().color = Color.red;
+        netBalls[population - 1].GetComponent<SpriteRenderer>().sortingOrder = 3;
+        netBalls[population - 1].AddComponent<LineRenderer>();
+        LineRenderer _lr = netBalls[population - 1].GetComponent<LineRenderer>();
+        netBalls[population - 1].AddComponent<TracePath>();
+
     }
 
     // This function looks at the tilemap and parses the tile information into a one dimensional array to input into the neural network. It gets information
