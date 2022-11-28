@@ -16,7 +16,7 @@ public class NetGolfBallController : MonoBehaviour
     public float power; // The power of the ball
     float maxPower = 1000.0f;
 
-    public float hitDissuasion = 1;
+    public float hitDissuasion = 1; // How strongly extra hits should be discouraged
     public int timesHit = 0; // The number of times the ball has been hit
     public int hitAttempts = 0; // Times the network has attempted to hit the ball
 
@@ -43,9 +43,6 @@ public class NetGolfBallController : MonoBehaviour
                 {
                     _net.AddFitness(34);
                 }
-                
-
-                Debug.Log(_net.GetFitness());
 
                 finished = true;
                 _nm.finishedNets += 1;
@@ -61,7 +58,7 @@ public class NetGolfBallController : MonoBehaviour
         float radianAngle = Mathf.Deg2Rad * (maxAngle/2 + (maxAngle/2 * outputs[0]));
         float power = (maxPower / 2 + (maxPower / 2 * outputs[1]));
 
-        if (outputs[2] > 0.5)
+        if (outputs[2] > 0)
         {
             _rb.AddForce(new Vector2(Mathf.Cos(radianAngle), Mathf.Sin(radianAngle)) * power, ForceMode2D.Impulse);
             timesHit += 1;
@@ -78,5 +75,6 @@ public class NetGolfBallController : MonoBehaviour
         maxHitAttempts = _nm.maxHitAttempts;
         maxPower = _nm.maxPower;   
         maxAngle = _nm.maxAngle;
+        hitDissuasion = _nm.hitDissuasion;
     }
 }

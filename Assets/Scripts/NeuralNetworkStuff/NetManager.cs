@@ -13,10 +13,11 @@ public class NetManager : MonoBehaviour
     public float worstFitness = 0;
     public int bestFitnessTimesHit = 0;
 
-    public int population = 10;
+    public int population = 100;
     public int maxHitAttempts = 5;
     public float maxPower = 1000f;
     public float maxAngle = 180.0f;
+    public float hitDissuasion = 5f;
 
     private int[] layers = {484, 10, 10, 3 };
 
@@ -38,6 +39,12 @@ public class NetManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(population%4 != 0)
+        {
+            population = 20;
+            Debug.Log("Population must be divisible by 4, it was set to 20 by default");
+        }
+
         parseWorld();
         for(int i = 0; i < population; i++)
         {
@@ -54,6 +61,17 @@ public class NetManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // These buttons control timescale of the evolution since the balls can take a long time to stop sometimes
+        // Subject to change but shorthand is the following
+        // MegaSpeed = m
+        // SuperSpeed = d
+        // SpeedUp = s
+        // NormalSpeed = a
+        // SlowDown = f
+        if (Input.GetButtonDown("MegaSpeed"))
+        {
+            Time.timeScale = 100;
+        }
         if (Input.GetButtonDown("SuperSpeed"))
         {
             Time.timeScale = 20;
@@ -73,32 +91,59 @@ public class NetManager : MonoBehaviour
 
         if (finishedNets >= population)
         {
+            // Finished nets is set to 0 so that we know none of the next generation have finished
             finishedNets = 0;
-            nets.Sort();
 
-            bestFitness = nets[population - 1].GetFitness();
-            worstFitness = nets[0].GetFitness();
-            bestFitnessTimesHit = netBalls[population - 1].GetComponent<NetGolfBallController>().timesHit;
-
-            for (int i = 0; i < population / 2; i++)
+            int maxFitnessIndex = 0;
+            float maxFitness = Mathf.NegativeInfinity;
+            for(int i = 0; i < nets.Count; i++)
             {
-                nets[i] = new NeuralNetwork(nets[i + (population / 2)], worldState);
-                nets[i].Mutate();
-
-                nets[i + (population / 2)] = new NeuralNetwork(nets[i + (population / 2)], worldState);
+                if (nets[i].GetFitness() >= maxFitness)
+                {
+                    maxFitnessIndex = i;
+                    maxFitness = nets[i].GetFitness();
+                }
             }
 
+            bestFitnessTimesHit = netBalls[maxFitnessIndex].GetComponent<NetGolfBallController>().timesHit;
+
+            // Sort nets in ascending order so that nets[0] is worst fitness and nets[population - 1] is best
+            nets.Sort();
+
+            // Get fitnesses and times hit for display
+            bestFitness = nets[population - 1].GetFitness();
+            worstFitness = nets[0].GetFitness();
+            
+
+            // Generate next generation
+            for (int i = 0; i < population / 4; i++)
+            {
+                // Randomize first two quarters of next generation
+                nets[i] = new NeuralNetwork(layers, worldState);
+                nets[i + ((1*population) / 4)] = new NeuralNetwork(layers, worldState);
+
+                // Mutate the best quarter from the last generation as the third quarter of the next generation
+                nets[i + ((2*population) / 4)] = new NeuralNetwork(nets[i + ((3*population) / 4)], worldState);
+                nets[i + ((2*population) / 4)].Mutate();
+
+                // Copy the best quarter from the last generation as the final quarter of the next generation
+                nets[i + ((3*population) / 4)] = new NeuralNetwork(nets[i + ((3*population) / 4)], worldState);
+            }
+
+            // Set all fitnesses to 0 since we copied some networks
             for (int i = 0; i < population; i++)
             {
                 nets[i].SetFitness(0f);
             }
 
+            // Destroy golf balls from old generation and create new generation of balls
             CreateNetBalls();
 
             generation += 1;
         }
     }
 
+    // This function destroys old balls and creates new balls
     private void CreateNetBalls()
     {
         if (netBalls != null)
@@ -121,6 +166,8 @@ public class NetManager : MonoBehaviour
 
     }
 
+    // This function looks at the tilemap and parses the tile information into a one dimensional array to input into the neural network. It gets information
+    // about where the blocks are as well as the goal since that information is static for each level.
     public void parseWorld()
     {
         BoundsInt bounds = _tilemap.cellBounds;
