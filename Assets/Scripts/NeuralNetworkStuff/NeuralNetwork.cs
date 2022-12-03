@@ -58,6 +58,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
             }
         }
     }
+
     private void InitNeurons()
     {
         List<float[]> neuronsList = new List<float[]>();
@@ -137,7 +138,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
                 {
                     float weight = weights[i][j][k];
 
-                    float randomNumber = (float)random.NextDouble() * 1000f;
+                    float randomNumber = (float)random.NextDouble() * 100f;
 
                     if ( randomNumber <= 2f)
                     {

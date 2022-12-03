@@ -84,8 +84,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Neural Network Level 5.unity
     guid: 109fd6f3eaf9d974580d7a5302ea0751
   - enabled: 1
-    path: 
-    guid: 00000000000000000000000000000000
+    path: Assets/Scenes/Neural Network Level 6.unity
+    guid: 00a41f9c81046c54096f7157fcebd53c
   - enabled: 1
     path: Assets/Scenes/Neural Network Level 7.unity
     guid: d7b16dda4d076b24ebb8ede08589d47c

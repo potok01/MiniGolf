@@ -1,24 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class NetManager : MonoBehaviour
 {
+    public GameObject victoryScreen;
+    public TextMeshProUGUI putText;
+
+    private bool finishedTraining = false;
     public int finishedNets = 0;
     public int generation = 0;
 
     public float bestFitness = 0;
     public float worstFitness = 0;
-    public int bestFitnessTimesHit = 0;
 
-    private int population = 8;
+    private float holeInOneThreshold = 67f;
+    private int population = 50;
     public int maxHitAttempts = 1;
     public float maxPower = 1000f;
     public float maxAngle = 180.0f;
 
-    private int[] layers = {484, 484, 3};
+    private int[] layers = {484, 10, 10, 2};
 
     public GameObject netBall;
 
@@ -27,7 +32,7 @@ public class NetManager : MonoBehaviour
 
     private Tilemap _tilemap;
 
-    public int[] worldState = new int[482];
+    private int[] worldState = new int[482];
     public float goalPosX;
     public float goalPosY;
 
@@ -38,21 +43,35 @@ public class NetManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(population%4 != 0)
+        if(population%2 != 0)
         {
             population = 20;
-            Debug.Log("Population must be divisible by 4, it was set to 20 by default");
+            Debug.Log("Population must be divisible by 2, it was set to 20 by default otherwise");
         }
 
         parseWorld();
+
+
         for(int i = 0; i < population; i++)
         {
-            NeuralNetwork net = new NeuralNetwork(layers, worldState);
-            net.Mutate();
-            nets.Add(net);
-
+            
+            if (CurrentBestNeuralNetwork.bestNet != null)
+            {
+                NeuralNetwork net = new NeuralNetwork(CurrentBestNeuralNetwork.bestNet, worldState);
+                if (i != 0)
+                {
+                    net.Mutate();
+                }
+                nets.Add(net);
+            }
+            else
+            {
+                NeuralNetwork net = new NeuralNetwork(layers, worldState);
+                net.Mutate();
+                nets.Add(net);
+            }
             GameObject newNetBall = Instantiate(netBall, new Vector3(-14.75f, -7.75f, 0), new Quaternion(0, 0, 0, 1));
-            newNetBall.GetComponent<NetGolfBallController>().Init(net, this);
+            newNetBall.GetComponent<NetGolfBallController>().Init(nets[i], this);
             netBalls.Add(newNetBall);
         }
     }
@@ -60,85 +79,89 @@ public class NetManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // These buttons control timescale of the evolution since the balls can take a long time to stop sometimes
-        // Subject to change but shorthand is the following
-        // MegaSpeed = m
-        // SuperSpeed = d
-        // SpeedUp = s
-        // NormalSpeed = a
-        // SlowDown = f
-        if (Input.GetButtonDown("MegaSpeed"))
+        if (!finishedTraining)
         {
-            Time.timeScale = 100;
-        }
-        if (Input.GetButtonDown("SuperSpeed"))
-        {
-            Time.timeScale = 20;
-        }
-        if (Input.GetButtonDown("SpeedUp"))
-        {
-            Time.timeScale = 5;
-        }
-        if (Input.GetButtonDown("NormalSpeed"))
-        {
-            Time.timeScale = 0.5f;
-        }
-        if (Input.GetButtonDown("SlowDown"))
-        {
-            Time.timeScale = 0.5f;
-        }
-
-        if (finishedNets >= population)
-        {
-            // Finished nets is set to 0 so that we know none of the next generation have finished
-            finishedNets = 0;
-
-            int maxFitnessIndex = 0;
-            float maxFitness = Mathf.NegativeInfinity;
-            for(int i = 0; i < nets.Count; i++)
+            // These buttons control timescale of the evolution since the balls can take a long time to stop sometimes
+            // Subject to change but shorthand is the following
+            // MegaSpeed = m
+            // SuperSpeed = d
+            // SpeedUp = s
+            // NormalSpeed = a
+            // SlowDown = f
+            if (Input.GetButtonDown("MegaSpeed"))
             {
-                if (nets[i].GetFitness() >= maxFitness)
+                Time.timeScale = 100;
+            }
+            if (Input.GetButtonDown("SuperSpeed"))
+            {
+                Time.timeScale = 20;
+            }
+            if (Input.GetButtonDown("SpeedUp"))
+            {
+                Time.timeScale = 5;
+            }
+            if (Input.GetButtonDown("NormalSpeed"))
+            {
+                Time.timeScale = 0.5f;
+            }
+            if (Input.GetButtonDown("SlowDown"))
+            {
+                Time.timeScale = 0.5f;
+            }
+
+            if (finishedNets >= population)
+            {
+                // Finished nets is set to 0 so that we know none of the next generation have finished
+                finishedNets = 0;
+
+                int maxFitnessIndex = 0;
+                float maxFitness = Mathf.NegativeInfinity;
+                for (int i = 0; i < nets.Count; i++)
                 {
-                    maxFitnessIndex = i;
-                    maxFitness = nets[i].GetFitness();
+                    if (nets[i].GetFitness() >= maxFitness)
+                    {
+                        maxFitnessIndex = i;
+                        maxFitness = nets[i].GetFitness();
+                    }
                 }
+
+                // Sort nets in ascending order so that nets[0] is worst fitness and nets[population - 1] is best
+                nets.Sort();
+
+                // Get fitnesses and times hit for display
+                bestFitness = nets[population - 1].GetFitness();
+                worstFitness = nets[0].GetFitness();
+
+                if (bestFitness > holeInOneThreshold)
+                {
+                    Debug.Log("Next level");
+                    NextLevel();
+                    finishedTraining = true;
+                    return;
+                }
+
+                // Generate next generation
+                for (int i = 0; i < population / 2; i++)
+                {
+                    // Mutate the best half from the last generation
+                    nets[i] = new NeuralNetwork(nets[i + ((population) / 2)], worldState);
+                    nets[i].Mutate();
+
+                    // Copy the best half from the last generation
+                    nets[i + ((population) / 2)] = new NeuralNetwork(nets[i + ((population) / 2)], worldState);
+                }
+
+                // Set all fitnesses to 0 since we copied some networks
+                for (int i = 0; i < population; i++)
+                {
+                    nets[i].SetFitness(0f);
+                }
+
+                // Destroy golf balls from old generation and create new generation of balls
+                CreateNetBalls();
+
+                generation += 1;
             }
-
-            bestFitnessTimesHit = netBalls[maxFitnessIndex].GetComponent<NetGolfBallController>().timesHit;
-
-            // Sort nets in ascending order so that nets[0] is worst fitness and nets[population - 1] is best
-            nets.Sort();
-
-            // Get fitnesses and times hit for display
-            bestFitness = nets[population - 1].GetFitness();
-            worstFitness = nets[0].GetFitness();
-            
-
-            // Generate next generation
-            for (int i = 0; i < population / 4; i++)
-            {
-                // Randomize first two quarters of next generation
-                nets[i] = new NeuralNetwork(layers, worldState);
-                nets[i + ((1*population) / 4)] = new NeuralNetwork(layers, worldState);
-
-                // Mutate the best quarter from the last generation as the third quarter of the next generation
-                nets[i + ((2*population) / 4)] = new NeuralNetwork(nets[i + ((3*population) / 4)], worldState);
-                nets[i + ((2*population) / 4)].Mutate();
-
-                // Copy the best quarter from the last generation as the final quarter of the next generation
-                nets[i + ((3*population) / 4)] = new NeuralNetwork(nets[i + ((3*population) / 4)], worldState);
-            }
-
-            // Set all fitnesses to 0 since we copied some networks
-            for (int i = 0; i < population; i++)
-            {
-                nets[i].SetFitness(0f);
-            }
-
-            // Destroy golf balls from old generation and create new generation of balls
-            CreateNetBalls();
-
-            generation += 1;
         }
     }
 
@@ -208,4 +231,13 @@ public class NetManager : MonoBehaviour
         goalPosY = goalInWorld.y;
     }
 
+    public void NextLevel()
+    {
+        CurrentBestNeuralNetwork.bestNet = new NeuralNetwork(nets[population - 1], worldState);
+        putText.text = "Best Fitness: " + bestFitness.ToString();
+        victoryScreen.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Time.timeScale = 0f;
+    }
 }
