@@ -19,7 +19,7 @@ public class Fitness : MonoBehaviour
     private void Update()
     {
         _text.text = "Best Fitness: " + _netManager.bestFitness.ToString() + "\nWorst Fitness: " 
-            + _netManager.worstFitness.ToString() + "\nBest Fitness Puts: " + _netManager.bestFitnessTimesHit.ToString();
+            + _netManager.worstFitness.ToString();
     }
 
 

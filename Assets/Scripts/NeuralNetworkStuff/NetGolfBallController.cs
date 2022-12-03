@@ -16,7 +16,6 @@ public class NetGolfBallController : MonoBehaviour
     public float power; // The power of the ball
     float maxPower = 1000.0f;
 
-    public float hitDissuasion = 1; // How strongly extra hits should be discouraged
     public int timesHit = 0; // The number of times the ball has been hit
     public int hitAttempts = 0; // Times the network has attempted to hit the ball
 
@@ -36,7 +35,7 @@ public class NetGolfBallController : MonoBehaviour
             {
                 float distance = Mathf.Sqrt(Mathf.Pow((_nm.goalPosX - transform.position.x), 2) + Mathf.Pow((_nm.goalPosY - transform.position.y), 2));
 
-                _net.AddFitness(34 - distance - (hitDissuasion * timesHit));
+                _net.AddFitness(34 - distance);
 
                 
                 if(distance < 1)
@@ -75,6 +74,5 @@ public class NetGolfBallController : MonoBehaviour
         maxHitAttempts = _nm.maxHitAttempts;
         maxPower = _nm.maxPower;   
         maxAngle = _nm.maxAngle;
-        hitDissuasion = _nm.hitDissuasion;
     }
 }

@@ -13,13 +13,12 @@ public class NetManager : MonoBehaviour
     public float worstFitness = 0;
     public int bestFitnessTimesHit = 0;
 
-    public int population = 100;
-    public int maxHitAttempts = 5;
+    private int population = 8;
+    public int maxHitAttempts = 1;
     public float maxPower = 1000f;
     public float maxAngle = 180.0f;
-    public float hitDissuasion = 5f;
 
-    private int[] layers = {484, 10, 10, 3 };
+    private int[] layers = {484, 484, 3};
 
     public GameObject netBall;
 
