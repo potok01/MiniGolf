@@ -35,7 +35,7 @@ public class NetGolfBallController : MonoBehaviour
             {
                 float distance = Mathf.Sqrt(Mathf.Pow((_nm.goalPosX - transform.position.x), 2) + Mathf.Pow((_nm.goalPosY - transform.position.y), 2));
 
-                _net.AddFitness(34 - distance);
+                _net.AddFitness(34 - distance - (hitAttempts-1));
 
                 
                 if(distance < 1)

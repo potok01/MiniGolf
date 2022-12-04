@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class NetManager : MonoBehaviour
@@ -132,10 +134,15 @@ public class NetManager : MonoBehaviour
                 bestFitness = nets[population - 1].GetFitness();
                 worstFitness = nets[0].GetFitness();
 
-                if (bestFitness > holeInOneThreshold)
+                if (bestFitness > holeInOneThreshold && CurrentBestNeuralNetwork.auto == false)
                 {
-                    Debug.Log("Next level");
-                    NextLevel();
+                    ManualScreen();
+                    finishedTraining = true;
+                    return;
+                }
+                else if(bestFitness > holeInOneThreshold && CurrentBestNeuralNetwork.auto == true)
+                {
+                    AutoScreen();
                     finishedTraining = true;
                     return;
                 }
@@ -231,7 +238,7 @@ public class NetManager : MonoBehaviour
         goalPosY = goalInWorld.y;
     }
 
-    public void NextLevel()
+    public void ManualScreen()
     {
         CurrentBestNeuralNetwork.bestNet = new NeuralNetwork(nets[population - 1], worldState);
         putText.text = "Best Fitness: " + bestFitness.ToString();
@@ -239,5 +246,40 @@ public class NetManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         Time.timeScale = 0f;
+    }
+
+    public void AutoScreen()
+    {
+        CurrentBestNeuralNetwork.bestNet = new NeuralNetwork(nets[population - 1], worldState);
+        string fullName = SceneManager.GetActiveScene().name;
+        int length = fullName.Length;
+
+        char _char = fullName[length - 1];
+        int i = 1;
+        while (_char != ' ')
+        {
+            i++;
+            _char = fullName[length - i];
+        }
+        string levelIndex = fullName.Substring(length - i + 1);
+
+        Debug.Log(levelIndex);
+
+        if (levelIndex == "18")
+        {
+            levelIndex = "1";
+        }
+
+        string sceneName = "Neural Network Level " + (Int32.Parse(levelIndex)+1).ToString();
+
+        Debug.Log(sceneName);
+        if (Application.CanStreamedLevelBeLoaded(sceneName))
+        {
+            SceneManager.LoadSceneAsync(sceneName);
+        }
+        else
+        {
+            SceneManager.LoadSceneAsync("Empty Level");
+        }
     }
 }

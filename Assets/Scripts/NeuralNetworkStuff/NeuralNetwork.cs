@@ -138,7 +138,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
                 {
                     float weight = weights[i][j][k];
 
-                    float randomNumber = (float)random.NextDouble() * 100f;
+                    float randomNumber = (float)random.NextDouble() * 1000f;
 
                     if ( randomNumber <= 2f)
                     {
