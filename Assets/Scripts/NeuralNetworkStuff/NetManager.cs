@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
@@ -25,7 +27,7 @@ public class NetManager : MonoBehaviour
     public float maxPower = 1000f;
     public float maxAngle = 180.0f;
 
-    private int[] layers = {484, 10, 10, 2};
+    private int[] layers = {484, 484, 10, 2};
 
     public GameObject netBall;
 
@@ -134,15 +136,27 @@ public class NetManager : MonoBehaviour
                 bestFitness = nets[population - 1].GetFitness();
                 worstFitness = nets[0].GetFitness();
 
-                if (bestFitness > holeInOneThreshold && CurrentBestNeuralNetwork.auto == false)
+                if (bestFitness > holeInOneThreshold && CurrentBestNeuralNetwork.auto == false && CurrentBestNeuralNetwork.saveBest == true)
                 {
-                    ManualScreen();
+                    ManualTrainSaveBest();
                     finishedTraining = true;
                     return;
                 }
-                else if(bestFitness > holeInOneThreshold && CurrentBestNeuralNetwork.auto == true)
+                else if (bestFitness > holeInOneThreshold && CurrentBestNeuralNetwork.auto == true && CurrentBestNeuralNetwork.saveBest == true)
                 {
-                    AutoScreen();
+                    AutoTrainAllSaveBest();
+                    finishedTraining = true;
+                    return;
+                }
+                else if (bestFitness > holeInOneThreshold && CurrentBestNeuralNetwork.auto == true && CurrentBestNeuralNetwork.saveBest == false)
+                {
+                    AutoTrainAllForgetBest();
+                    finishedTraining = true;
+                    return;
+                }
+                else if (bestFitness > holeInOneThreshold && CurrentBestNeuralNetwork.auto == false && CurrentBestNeuralNetwork.saveBest == false)
+                {
+                    AutoTrainForgetBest();
                     finishedTraining = true;
                     return;
                 }
@@ -238,7 +252,7 @@ public class NetManager : MonoBehaviour
         goalPosY = goalInWorld.y;
     }
 
-    public void ManualScreen()
+    public void ManualTrainSaveBest()
     {
         CurrentBestNeuralNetwork.bestNet = new NeuralNetwork(nets[population - 1], worldState);
         putText.text = "Best Fitness: " + bestFitness.ToString();
@@ -248,8 +262,28 @@ public class NetManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    public void AutoScreen()
+    public void AutoTrainAllSaveBest()
     {
+        CurrentBestNeuralNetwork.generations.Add(generation);
+
+        if (CurrentBestNeuralNetwork.generations.Count % 18 == 0)
+        {
+            string path = "Assets/Resources/test.txt";
+            File.WriteAllText(path, string.Empty);
+
+            StreamWriter writer = new StreamWriter(path, true);
+            for (int j = 0; j < CurrentBestNeuralNetwork.generations.Count / 18; j++)
+            {
+                string line = string.Empty;
+                for (int k = 0; k < 18; k++)
+                {
+                    line += CurrentBestNeuralNetwork.generations[k + 18 * j].ToString() + ",";
+                }
+                writer.WriteLine(line.Substring(0, line.Length - 1));
+            }
+            writer.Close();
+        }
+
         CurrentBestNeuralNetwork.bestNet = new NeuralNetwork(nets[population - 1], worldState);
         string fullName = SceneManager.GetActiveScene().name;
         int length = fullName.Length;
@@ -263,7 +297,6 @@ public class NetManager : MonoBehaviour
         }
         string levelIndex = fullName.Substring(length - i + 1);
 
-        Debug.Log(levelIndex);
 
         if (levelIndex == "18")
         {
@@ -272,10 +305,85 @@ public class NetManager : MonoBehaviour
 
         string sceneName = "Neural Network Level " + (Int32.Parse(levelIndex)+1).ToString();
 
-        Debug.Log(sceneName);
         if (Application.CanStreamedLevelBeLoaded(sceneName))
         {
             SceneManager.LoadSceneAsync(sceneName);
+        }
+        else
+        {
+            SceneManager.LoadSceneAsync("Empty Level");
+        }
+    }
+
+    public void AutoTrainAllForgetBest()
+    {
+        CurrentBestNeuralNetwork.generations.Add(generation);
+
+        if (CurrentBestNeuralNetwork.generations.Count % 18 == 0)
+        {
+            string path = "Assets/Resources/test.txt";
+            File.WriteAllText(path, string.Empty);
+
+            StreamWriter writer = new StreamWriter(path, true);
+            for (int j = 0; j < CurrentBestNeuralNetwork.generations.Count/18; j++)
+            {
+                string line = string.Empty;
+                for (int k = 0; k < 18; k++)
+                {
+                    line += CurrentBestNeuralNetwork.generations[k+18*j].ToString() + ",";
+                }
+                writer.WriteLine(line.Substring(0, line.Length - 1));
+            }
+            writer.Close();
+        }
+
+        string fullName = SceneManager.GetActiveScene().name;
+        int length = fullName.Length;
+
+        char _char = fullName[length - 1];
+        int i = 1;
+        while (_char != ' ')
+        {
+            i++;
+            _char = fullName[length - i];
+        }
+        string levelIndex = fullName.Substring(length - i + 1);
+
+
+        if (levelIndex == "18")
+        {
+            levelIndex = "1";
+        }
+
+        string sceneName = "Neural Network Level " + (Int32.Parse(levelIndex) + 1).ToString();
+
+        if (Application.CanStreamedLevelBeLoaded(sceneName))
+        {
+            SceneManager.LoadSceneAsync(sceneName);
+        }
+        else
+        {
+            SceneManager.LoadSceneAsync("Empty Level");
+        }
+    }
+    public void AutoTrainForgetBest()
+    {
+        CurrentBestNeuralNetwork.generations.Add(generation);
+
+        string path = "Assets/Resources/test.txt";
+        File.WriteAllText(path, string.Empty);
+
+        StreamWriter writer = new StreamWriter(path, true);
+
+        for(int i = 0; i < CurrentBestNeuralNetwork.generations.Count; i++)
+        {
+            writer.WriteLine(CurrentBestNeuralNetwork.generations[i]);
+        }
+        writer.Close();
+
+        if (Application.CanStreamedLevelBeLoaded(SceneManager.GetActiveScene().name))
+        {
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         }
         else
         {

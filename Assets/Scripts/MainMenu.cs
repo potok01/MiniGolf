@@ -38,8 +38,12 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void AutoMode()
+    public void AutoMode(Toggle toggle)
     {
-        CurrentBestNeuralNetwork.auto = true;
+        CurrentBestNeuralNetwork.auto = toggle.isOn;
+    }
+    public void SaveBest(Toggle toggle)
+    {
+        CurrentBestNeuralNetwork.saveBest = toggle.isOn;
     }
 }
